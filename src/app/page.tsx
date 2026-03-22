@@ -1,13 +1,9 @@
 "use client";
 
-import PostList from "./_components/PostList";
+import { redirect } from "next/navigation";
 
-const PostsPage = () => {
-  return (
-    <div>
-      <PostList />
-    </div>
-  );
+const Home = () => {
+  redirect("/posts");
 };
 
-export default PostsPage;
+export default Home;
