@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Post } from "@/types/Post";
+import type { Post } from "@/_types/Post";
 
 const PostList = () => {
   const [posts, setPosts] = useState<Post[]>([]);

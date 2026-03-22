@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import type { Post } from "@/types/Post";
+import type { Post } from "@/_types/Post";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 const PostDetail = () => {
   const params = useParams();
@@ -48,7 +49,7 @@ const PostDetail = () => {
     <div className="max-w-3xl mx-auto my-16 space-y-10">
       <div key={post.id}>
         <dt>
-          <img src={post.thumbnailUrl} alt="" />
+          <Image src={post.thumbnailUrl} alt="" width={800} height={400} unoptimized />
         </dt>
         <div className="p-4">
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
