@@ -10,15 +10,15 @@ const PostList = () => {
 
   useEffect(() => {
     const fetcher = async () => {
-      try {
-        const res = await fetch("https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts");
-        const data = await res.json();
-        setPosts(data.posts ?? []);
-      } catch {
-        setPosts([]);
-      } finally {
-        setLoading(false);
-      }
+      const res = await fetch("https://h5w4frie2i.microcms.io/api/v1/", {
+        // 管理画面で取得したエンドポイントを入力してください。
+        headers: {
+          // fetch関数の第二引数にheadersを設定でき、その中にAPIキーを設定します。
+          "X-MICROCMS-API-KEY": "PvBXB8ryySQ5Ja2uzVRhEf4U3rvjj9CRlQAE", // 管理画面で取得したAPIキーを入力してください。
+        },
+      });
+      const { contents } = await res.json();
+      setPosts(contents);
     };
 
     fetcher();
