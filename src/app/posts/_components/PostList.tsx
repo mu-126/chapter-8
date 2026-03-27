@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Post } from "@/_types/Post";
+// import type { Post } from "@/_types/Post";
+import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
 
 const PostList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<MicroCmsPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,9 +43,9 @@ const PostList = () => {
               <div className="flex justify-between text-sm  text-zinc-500 mb-1">
                 <span>{new Date(elem.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
                 <div className="flex gap-2 flex-wrap pr-32">
-                  {elem.categories.map((cat) => (
-                    <span key={cat} className="bg-white   text-blue-700 border border-blue-700 px-2 py-0.5  rounded text-sm">
-                      {cat}
+                  {elem.categories?.map((cat) => (
+                    <span key={cat.id} className="bg-white   text-blue-700 border border-blue-700 px-2 py-0.5  rounded text-sm">
+                      {cat.name}
                     </span>
                   ))}
                 </div>

@@ -1,10 +1,8 @@
-export interface MicroCmsPost {
-  id: string;
+export type Post = {
+  id: number;
   title: string;
   content: string;
   createdAt: string;
-  categories: { id: string; name: string }[];
-  thumbnail: { url: string; height: number; width: number };
-}
-
-const [posts, setPosts] = useState<MicroCmsPost[]>([]);
+  categories: string[];
+  thumbnailUrl: string;
+};
