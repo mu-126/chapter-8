@@ -12,7 +12,7 @@ const PostList = () => {
 
   useEffect(() => {
     const fetcher = async () => {
-      const res = await fetch("https://h5w4frie2i.microcms.io/api/v1/", {
+      const res = await fetch("https://h5w4frie2i.microcms.io/api/v1/posts", {
         // 管理画面で取得したエンドポイントを入力してください。
         headers: {
           // fetch関数の第二引数にheadersを設定でき、その中にAPIキーを設定します。
@@ -21,6 +21,8 @@ const PostList = () => {
       });
       const { contents } = await res.json();
       setPosts(contents);
+
+      setLoading(false);
     };
 
     fetcher();

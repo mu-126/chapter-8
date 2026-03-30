@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 // import type { Post } from "@/_types/Post";
 import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
-import { notFound } from "next/navigation";
 import Image from "next/image";
 
 const PostDetail = () => {
@@ -20,13 +19,15 @@ const PostDetail = () => {
       try {
         setLoading(true);
 
-        const res = await fetch(`https://2gzszlwapo.microcms.io/api/v1/posts/${id}`, {
+        const res = await fetch(`https://h5w4frie2i.microcms.io/api/v1/posts/${id}`, {
           headers: {
             "X-MICROCMS-API-KEY": "PvBXB8ryySQ5Ja2uzVRhEf4U3rvjj9CRlQAE",
           },
         });
 
         const data: MicroCmsPost = await res.json();
+
+        console.log(data);
 
         setPost(data); // dataをそのままセット← ここがシンプルに変わる
       } catch (error) {
@@ -46,22 +47,20 @@ const PostDetail = () => {
 
   // 読み込みは終わったが、記事が存在しない
   if (!post) {
-    notFound();
+    return <div>記事が見つかりませんでした</div>;
   }
 
   return (
     <div className="max-w-3xl mx-auto my-16 space-y-10">
       <div key={post.id}>
-        <dt>
-          <Image src={post.thumbnail.url} alt="" width={post.thumbnailUrl.width} height={post.thumbnail.height} unoptimized />
-        </dt>
+        <dt>{post.thumbnail && <Image src={post.thumbnail.url} alt="" width={post.thumbnail.width} height={post.thumbnail.height} unoptimized />}</dt>
         <div className="p-4">
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
             <span>{new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
             <div className="flex gap-2 flex-wrap pr-4">
               {post.categories?.map((cat) => (
-                <span key={cat} className="bg-white text-blue-700 border border-blue-700 px-2 py-0.5 rounded text-sm">
-                  {cat}
+                <span key={cat.id} className="bg-white text-blue-700 border border-blue-700 px-2 py-0.5 rounded text-sm">
+                  {cat.name}
                 </span>
               ))}
             </div>
