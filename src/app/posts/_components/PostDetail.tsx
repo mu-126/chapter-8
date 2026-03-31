@@ -19,9 +19,10 @@ const PostDetail = () => {
       try {
         setLoading(true);
 
+        console.log(process.env.NEXT_PUBLIC_MICROCMS_API_KEY);
         const res = await fetch(`https://h5w4frie2i.microcms.io/api/v1/posts/${id}`, {
           headers: {
-            "X-MICROCMS-API-KEY": "PvBXB8ryySQ5Ja2uzVRhEf4U3rvjj9CRlQAE",
+            "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY as string,
           },
         });
 

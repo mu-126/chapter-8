@@ -16,13 +16,14 @@ const PostList = () => {
         // 管理画面で取得したエンドポイントを入力してください。
         headers: {
           // fetch関数の第二引数にheadersを設定でき、その中にAPIキーを設定します。
-          "X-MICROCMS-API-KEY": "PvBXB8ryySQ5Ja2uzVRhEf4U3rvjj9CRlQAE", // 管理画面で取得したAPIキーを入力してください。
+          "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY as string, // 管理画面で取得したAPIキーを入力してください。
         },
       });
       const { contents } = await res.json();
       setPosts(contents);
 
       setLoading(false);
+      console.log(process.env.NEXT_PUBLIC_MICROCMS_API_KEY);
     };
 
     fetcher();
