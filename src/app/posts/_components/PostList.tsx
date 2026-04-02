@@ -23,7 +23,6 @@ const PostList = () => {
       setPosts(contents);
 
       setLoading(false);
-      console.log(process.env.NEXT_PUBLIC_MICROCMS_API_KEY);
     };
 
     fetcher();
@@ -46,7 +45,7 @@ const PostList = () => {
               <div className="flex justify-between text-sm  text-zinc-500 mb-1">
                 <span>{new Date(elem.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
                 <div className="flex gap-2 flex-wrap pr-32">
-                  {elem.categories?.map((cat) => (
+                  {elem.categories.map((cat) => (
                     <span key={cat.id} className="bg-white   text-blue-700 border border-blue-700 px-2 py-0.5  rounded text-sm">
                       {cat.name}
                     </span>

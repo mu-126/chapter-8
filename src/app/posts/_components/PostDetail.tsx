@@ -19,7 +19,6 @@ const PostDetail = () => {
       try {
         setLoading(true);
 
-        console.log(process.env.NEXT_PUBLIC_MICROCMS_API_KEY);
         const res = await fetch(`https://h5w4frie2i.microcms.io/api/v1/posts/${id}`, {
           headers: {
             "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY as string,
@@ -59,7 +58,7 @@ const PostDetail = () => {
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
             <span>{new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
             <div className="flex gap-2 flex-wrap pr-4">
-              {post.categories?.map((cat) => (
+              {post.categories.map((cat) => (
                 <span key={cat.id} className="bg-white text-blue-700 border border-blue-700 px-2 py-0.5 rounded text-sm">
                   {cat.name}
                 </span>
