@@ -54,7 +54,7 @@ const PostDetail = () => {
   return (
     <div className="max-w-3xl mx-auto my-16 space-y-10">
       <div key={post.id}>
-        <dt>{post.thumbnailUrl && <Image src={post.thumbnailUrl} alt="" width={800} height={400} unoptimized />}</dt>
+        <div>{post.thumbnailUrl && <Image src={post.thumbnailUrl} alt="" width={800} height={400} unoptimized />}</div>
         <div className="p-4">
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
             <span>{new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
