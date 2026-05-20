@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 // import type { Post } from "@/_types/Post";
-import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
+// import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
+import type { PostShowResponse } from "@/app/api/posts/[id]/route";
 import Image from "next/image";
 
 const PostDetail = () => {
@@ -11,7 +12,7 @@ const PostDetail = () => {
   const id = params.id as string;
 
   // const [post, setPost] = useState<Post | null>(null);
-  const [post, setPost] = useState<MicroCmsPost | null>(null);
+  const [post, setPost] = useState<PostShowResponse["post"] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,17 +20,17 @@ const PostDetail = () => {
       try {
         setLoading(true);
 
-        const res = await fetch(`https://h5w4frie2i.microcms.io/api/v1/posts/${id}`, {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY as string,
-          },
-        });
+        const res = await fetch(`/api/posts/${id}`);
 
-        const data: MicroCmsPost = await res.json();
+        if (!res.ok) {
+          throw new Error("データ取得に失敗しました");
+        }
 
-        console.log(data);
+        const data: PostShowResponse = await res.json();
 
-        setPost(data); // dataをそのままセット← ここがシンプルに変わる
+        // console.log(data);
+
+        setPost(data.post); // dataをそのままセット← ここがシンプルに変わる
       } catch (error) {
         setPost(null); // 見つからなかった
       } finally {
@@ -53,14 +54,14 @@ const PostDetail = () => {
   return (
     <div className="max-w-3xl mx-auto my-16 space-y-10">
       <div key={post.id}>
-        <dt>{post.thumbnail && <Image src={post.thumbnail.url} alt="" width={800} height={400} unoptimized />}</dt>
+        <dt>{post.thumbnailUrl && <Image src={post.thumbnailUrl} alt="" width={800} height={400} unoptimized />}</dt>
         <div className="p-4">
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
             <span>{new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>
             <div className="flex gap-2 flex-wrap pr-4">
-              {post.categories.map((cat) => (
-                <span key={cat.id} className="bg-white text-blue-700 border border-blue-700 px-2 py-0.5 rounded text-sm">
-                  {cat.name}
+              {post.postCategories.map((pc) => (
+                <span key={pc.category.id} className="bg-white text-blue-700 border border-blue-700 px-2 py-0.5 rounded text-sm">
+                  {pc.category.name}
                 </span>
               ))}
             </div>
