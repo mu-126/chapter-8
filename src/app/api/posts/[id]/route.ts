@@ -20,9 +20,10 @@ export type PostShowResponse = {
 };
 
 // GET /api/posts/[id]
-export const GET = async (request: Request, { params }: { params: { id: string } }) => {
+export const GET = async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
   try {
-    const postId = Number(params.id); // URLのidは文字列なのでDB用に数値に変換する
+    const { id } = await params;
+    const postId = Number(id); // URLのidは文字列なのでDB用に数値に変換する
 
     const post = await prisma.post.findUnique({
       where: {

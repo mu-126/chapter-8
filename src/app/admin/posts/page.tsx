@@ -7,22 +7,22 @@ import Link from "next/link";
 
 const AdminPostsPage = () => {
   const [posts, setPosts] = useState<AdminPostsIndexResponse["posts"]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // postsの状態管理
 
   useEffect(() => {
     const fetcher = async () => {
       try {
         setLoading(true);
 
-        const res = await fetch("/api/admin/posts");
+        const res = await fetch("/api/admin/posts"); // fetchでAPIにデータを取りに行く
 
         if (!res.ok) {
           throw new Error("取得失敗");
         }
 
-        const data: AdminPostsIndexResponse = await res.json();
+        const data: AdminPostsIndexResponse = await res.json(); // JSONに変換
 
-        setPosts(data.posts);
+        setPosts(data.posts); // 取得したデータを画面に入れる
       } catch (error) {
         console.error(error);
         setPosts([]);
@@ -46,6 +46,7 @@ const AdminPostsPage = () => {
         <p>記事がありません</p>
       ) : (
         <ul className="space-y-4">
+          {/* posts.map()で画面に表示 */}
           {posts.map((post) => (
             <li key={post.id} className="border p-4 rounded">
               <Link href={`/posts/${post.id}`}>

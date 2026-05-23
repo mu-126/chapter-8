@@ -1,5 +1,5 @@
 import { prisma } from "@/app/_libs/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // レスポンスの型
 export type AdminPostDetailResponse = {
@@ -20,9 +20,11 @@ export type AdminPostDetailResponse = {
 };
 
 // GET: 記事詳細取得
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const postId = Number(params.id);
+    // paramsをawait
+    const { id } = await params;
+    const postId = Number(id);
 
     if (isNaN(postId)) {
       return NextResponse.json({ message: "IDが不正です" }, { status: 400 });
