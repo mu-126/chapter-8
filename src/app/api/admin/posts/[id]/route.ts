@@ -117,3 +117,34 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
   }
 }
+
+// DELETE: 記事削除API
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  try {
+    const postId = Number(params.id);
+
+    // 存在チェック（任意）
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return NextResponse.json({ message: "記事が見つかりません" }, { status: 404 });
+    }
+
+    // 中間テーブルを先に削除
+    await prisma.postCategory.deleteMany({
+      where: { postId: postId },
+    });
+
+    // 削除処理
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+
+    return NextResponse.json({ message: "削除成功" }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+  }
+}
