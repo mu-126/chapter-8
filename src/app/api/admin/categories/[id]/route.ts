@@ -6,7 +6,7 @@ export type AdminCategoryShowResponse = {
   category: {
     id: number;
     name: string;
-    postCategories: {
+    posts: {
       post: {
         id: number;
         title: string;
@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest, { params }: { params: Promise<{ 
     const category = await prisma.category.findUnique({
       where: { id: Number(id) },
       include: {
-        postCategories: {
+        posts: {
           include: {
             post: true,
           },
