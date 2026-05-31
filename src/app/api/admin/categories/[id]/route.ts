@@ -6,16 +6,26 @@ export type AdminCategoryShowResponse = {
   category: {
     id: number;
     name: string;
+    postCategories: {
+      post: {
+        id: number;
+        title: string;
+        content: string;
+        thumbnailUrl: string;
+        createdAt: Date;
+        updatedAt: Date;
+      };
+    }[];
   };
 };
 
-// GET /api/admin/categories/[id]
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+// GET
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
-    const categoryId = Number(params.id);
+    const { id } = await params;
 
     const category = await prisma.category.findUnique({
-      where: { id: categoryId },
+      where: { id: Number(id) },
       include: {
         postCategories: {
           include: {
@@ -36,4 +46,4 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     console.error(error);
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
   }
-}
+};
