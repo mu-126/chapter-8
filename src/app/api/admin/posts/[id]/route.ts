@@ -119,32 +119,25 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 // DELETE: 記事削除API
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export const DELETE = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
-    const postId = Number(params.id);
+    const { id } = await params;
 
-    // 存在チェック（任意）
-    const post = await prisma.post.findUnique({
-      where: { id: postId },
-    });
+    const postId = Number(id);
 
-    if (!post) {
-      return NextResponse.json({ message: "記事が見つかりません" }, { status: 404 });
-    }
-
-    // 中間テーブルを先に削除
+    // 中間テーブル削除（必要なら）
     await prisma.postCategory.deleteMany({
-      where: { postId: postId },
+      where: { postId },
     });
 
-    // 削除処理
+    // 投稿削除
     await prisma.post.delete({
       where: { id: postId },
     });
 
-    return NextResponse.json({ message: "削除成功" }, { status: 200 });
+    return NextResponse.json({ message: "削除成功" });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
   }
-}
+};
