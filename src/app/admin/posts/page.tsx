@@ -39,39 +39,27 @@ const AdminPostsPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-8 space-y-6">
-      <h1 className="text-2xl font-bold">記事一覧（管理）</h1>
+    <>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold">記事一覧</h2>
 
-      {posts.length === 0 ? (
-        <p>記事がありません</p>
-      ) : (
-        <ul className="space-y-4">
-          {/* posts.map()で画面に表示 */}
-          {posts.map((post) => (
-            <li key={post.id} className="border p-4 rounded">
-              <Link href={`/posts/${post.id}`}>
-                <h2 className="text-lg font-semibold hover:underline">{post.title}</h2>
-              </Link>
+        <Link href="/admin/posts/new" className="bg-blue-500 text-white px-4 py-2 rounded">
+          新規作成
+        </Link>
+      </div>
 
-              {/* サムネイル */}
-              {post.thumbnailUrl && <Image src={post.thumbnailUrl} alt="" width={200} height={120} />}
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id} className="py-4 border-b border-gray-300">
+            <Link href={`/admin/posts/${post.id}`}>
+              <h3 className="font-semibold hover:underline">{post.title}</h3>
+            </Link>
 
-              {/* 日付 */}
-              <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString("ja-JP")}</p>
-
-              {/* カテゴリ */}
-              <div className="flex gap-2 flex-wrap mt-2">
-                {post.postCategories.map((pc) => (
-                  <span key={pc.category.id} className="text-xs border px-2 py-1 rounded">
-                    {pc.category.name}
-                  </span>
-                ))}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+            <p className="text-sm text-gray-500">{new Date(post.createdAt).toLocaleDateString("ja-JP")}</p>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 
