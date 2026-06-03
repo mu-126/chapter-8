@@ -69,16 +69,16 @@ export default function CategoryDetailPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">カテゴリー編集</h1>
 
-      <div className="max-w-xl">
+      <div className="max-w-2xl">
         {/* ラベル */}
         <label className="block mb-2 font-medium">カテゴリー名</label>
 
         {/* 入力欄 */}
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full border rounded px-3 py-2 mb-4" />
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2 mb-4" />
 
         {/* ボタン */}
         <div className="flex gap-3">
-          <button onClick={handleUpdate} className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button onClick={handleUpdate} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
             更新
           </button>
 
