@@ -20,9 +20,9 @@ export type AdminCategoryShowResponse = {
 };
 
 // GET
-export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+export const GET = async (request: NextRequest, context: { params: Promise<{ id: string }> }) => {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
 
     const category = await prisma.category.findUnique({
       where: { id: Number(id) },
@@ -49,9 +49,9 @@ export const GET = async (request: NextRequest, { params }: { params: Promise<{ 
 };
 
 // PUT: カテゴリー更新
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const categoryId = Number(params.id);
+    const { id } = await context.params;
 
     // body取得
     const body = await req.json();
@@ -64,7 +64,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     // 更新処理
     const updatedCategory = await prisma.category.update({
-      where: { id: categoryId },
+      where: { id: Number(id) },
       data: {
         name,
       },
