@@ -76,3 +76,35 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
   }
 }
+
+// DELETE: カテゴリー削除
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await context.params;
+    const categoryId = Number(id);
+
+    // ① 存在チェック
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      return NextResponse.json({ message: "カテゴリーが見つかりません" }, { status: 404 });
+    }
+
+    // ② 中間テーブル削除（重要）
+    await prisma.postCategory.deleteMany({
+      where: { categoryId },
+    });
+
+    // ③ カテゴリー削除
+    await prisma.category.delete({
+      where: { id: categoryId },
+    });
+
+    return NextResponse.json({ message: "削除しました" });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+  }
+}
