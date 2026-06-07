@@ -14,12 +14,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex">
         {/* サイドバー */}
         <aside className="w-64 bg-gray-200 min-h-screen">
-          <div className="p-4 space-y-2">
-            <Link href="/admin/posts" className={`block w-full px-4 py-2 rounded ${isPost ? "bg-slate-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
+          {/* <div className="p-4 space-y-2"> */}
+          <div>
+            <Link href="/admin/posts" className={`block w-full px-4 py-2 rounded ${isPost ? "bg-blue-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
               記事一覧
             </Link>
 
-            <Link href="/admin/categories" className={`block w-full px-4 py-2 rounded ${isCategory ? "bg-slate-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
+            <Link href="/admin/categories" className={`block w-full px-4 py-2 rounded ${isCategory ? "bg-blue-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
               カテゴリー一覧
             </Link>
           </div>
