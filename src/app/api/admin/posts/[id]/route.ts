@@ -119,7 +119,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 // DELETE: 記事削除API
-export const DELETE = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -140,4 +140,4 @@ export const DELETE = async (request: NextRequest, { params }: { params: Promise
     console.error(error);
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
   }
-};
+}
