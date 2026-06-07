@@ -41,7 +41,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="p-8">
+    <div>
       {/* ヘッダー */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">カテゴリー一覧</h2>
