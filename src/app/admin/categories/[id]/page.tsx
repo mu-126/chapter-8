@@ -66,7 +66,7 @@ export default function CategoryDetailPage() {
   if (loading) return <p className="p-4">読み込み中...</p>;
 
   return (
-    <div className="p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6">カテゴリー編集</h1>
 
       <div className="max-w-2xl">
