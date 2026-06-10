@@ -1,12 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+type Category = {
+  id: number;
+  name: string;
+};
 
 const NewPostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // カテゴリー取得
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/admin/categories");
+
+        if (!res.ok) {
+          throw new Error("取得失敗");
+        }
+
+        const data = await res.json();
+        setCategories(data.categories);
+      } catch (error) {
+        console.error(error);
+        alert("カテゴリー取得エラー");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,11 +85,19 @@ const NewPostPage = () => {
         {/* カテゴリー */}
         <div>
           <label className="block mb-1 text-sm">カテゴリー</label>
-          <select className="w-full border rounded px-3 py-2" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-            <option value="">選択してください</option>
-            <option value="1">カテゴリー1</option>
-            <option value="2">カテゴリー2</option>
-          </select>
+          {loading ? (
+            <p>読み込み中...</p>
+          ) : (
+            <select className="w-full border rounded px-3 py-2" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+              <option value="">選択してください</option>
+
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         {/* ボタン */}
