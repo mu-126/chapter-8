@@ -10,7 +10,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const isPost = pathname.startsWith("/admin/posts");
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <div className="flex">
         {/* サイドバー */}
         <aside className="w-64 bg-gray-200 min-h-screen">
