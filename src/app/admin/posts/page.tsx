@@ -43,7 +43,7 @@ const AdminPostsPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">記事一覧</h2>
 
-        <Link href="/admin/posts/new" className="bg-blue-500 text-white px-4 py-2 rounded">
+        <Link href="/admin/posts/new" className="bg-indigo-500 text-white px-4 py-2 rounded">
           新規作成
         </Link>
       </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function NewPostPage() {
+const NewPostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -68,4 +68,6 @@ export default function NewPostPage() {
       </form>
     </div>
   );
-}
+};
+
+export default NewPostPage;
