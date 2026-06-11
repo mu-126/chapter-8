@@ -93,13 +93,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
         // カテゴリ更新（全削除→再作成）
         postCategories: {
-          //deleteMany: {},
-          /* create:
+          deleteMany: {},
+          create:
             categoryIds?.map((categoryId: number) => ({
               category: {
                 connect: { id: categoryId },
               },
-            })) || [], */
+            })) || [],
         },
       },
       include: {
