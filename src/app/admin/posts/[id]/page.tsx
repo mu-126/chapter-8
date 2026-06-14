@@ -79,7 +79,7 @@ const PostEditPage = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">記事編集</h1>
 
       <div className="space-y-4">
@@ -111,7 +111,7 @@ const PostEditPage = () => {
         </div>
 
         <div className="flex gap-3 pt-4">
-          <button onClick={handleUpdate} className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button onClick={handleUpdate} className="bg-indigo-600 text-white px-4 py-2 rounded">
             更新
           </button>
 

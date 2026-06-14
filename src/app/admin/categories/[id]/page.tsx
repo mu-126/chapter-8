@@ -8,15 +8,13 @@ type Category = {
   name: string;
 };
 
-export default function CategoryDetailPage() {
+const CategoryDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
 
-  // const [category, setCategory] = useState<Category | null>(null);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState("");
 
   // 取得
   useEffect(() => {
@@ -89,4 +87,6 @@ export default function CategoryDetailPage() {
       </div>
     </div>
   );
-}
+};
+
+export default CategoryDetailPage;

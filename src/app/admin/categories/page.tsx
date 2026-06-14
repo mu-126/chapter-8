@@ -8,7 +8,7 @@ type Category = {
   name: string;
 };
 
-export default function CategoriesPage() {
+const CategoriesPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,4 +63,6 @@ export default function CategoriesPage() {
       </ul>
     </div>
   );
-}
+};
+
+export default CategoriesPage;

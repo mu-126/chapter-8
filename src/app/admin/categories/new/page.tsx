@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function NewCategoryPage() {
+const NewCategoryPage = () => {
   const [name, setName] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,4 +41,6 @@ export default function NewCategoryPage() {
       </form>
     </div>
   );
-}
+};
+
+export default NewCategoryPage;
