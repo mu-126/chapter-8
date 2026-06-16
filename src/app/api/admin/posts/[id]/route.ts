@@ -1,29 +1,13 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-// レスポンスの型
-export type AdminPostDetailResponse = {
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    thumbnailUrl: string;
-    createdAt: Date;
-    updatedAt: Date;
-    postCategories: {
-      category: {
-        id: number;
-        name: string;
-      };
-    }[];
-  } | null;
-};
+import { AdminPostDetailResponse } from "@/_types/Post";
+import { DeleteResponse } from "@/_types/Post";
 
 // GET: 記事詳細取得
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // paramsをawait
-    const { id } = await params;
+    const { id } = params;
     const postId = Number(id);
 
     if (isNaN(postId)) {
@@ -47,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "記事が見つかりません" }, { status: 404 });
     }
 
-    return NextResponse.json({ post });
+    return NextResponse.json<AdminPostDetailResponse>({ post });
   } catch (error) {
     console.error(error);
 
@@ -58,7 +42,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT: 記事更新
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const postId = Number(id);
 
     if (isNaN(postId)) {
@@ -111,7 +95,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       },
     });
 
-    return NextResponse.json({ post: updatedPost });
+    return NextResponse.json<AdminPostDetailResponse>({ post: updatedPost });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
@@ -121,7 +105,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE: 記事削除API
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    const { id } = params;
 
     const postId = Number(id);
 
@@ -135,7 +119,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       where: { id: postId },
     });
 
-    return NextResponse.json({ message: "削除成功" });
+    return NextResponse.json<DeleteResponse>({ message: "削除成功" });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });

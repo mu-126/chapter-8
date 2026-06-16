@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { AdminPostDetailResponse } from "@/_types/Post";
 
-type Category = {
+/* type Category = {
   id: number;
   name: string;
-};
+}; */
 
 const PostEditPage = () => {
   const { id } = useParams();
@@ -22,7 +23,7 @@ const PostEditPage = () => {
   useEffect(() => {
     const fetchPost = async () => {
       const res = await fetch(`/api/admin/posts/${id}`);
-      const data = await res.json();
+      const data: AdminPostDetailResponse = await res.json();
 
       const post = data.post;
 
