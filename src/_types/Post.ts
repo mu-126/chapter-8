@@ -19,8 +19,8 @@ export type AdminPostDetailResponse = {
     title: string;
     content: string;
     thumbnailUrl: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     postCategories: {
       category: {
         id: number;
