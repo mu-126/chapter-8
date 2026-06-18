@@ -2,12 +2,13 @@ import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { AdminPostDetailResponse } from "@/_types/Post";
 import { DeleteResponse } from "@/_types/Post";
+import { ErrorResponse } from "@/_types/Post";
 
 // GET: 記事詳細取得
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // paramsをawait
-    const { id } = params;
+    const { id } = await params;
     const postId = Number(id);
 
     if (isNaN(postId)) {
@@ -35,14 +36,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }
 
 // PUT: 記事更新
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const postId = Number(id);
 
     if (isNaN(postId)) {
@@ -98,14 +99,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json<AdminPostDetailResponse>({ post: updatedPost });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }
 
 // DELETE: 記事削除API
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const postId = Number(id);
 
@@ -122,6 +123,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json<DeleteResponse>({ message: "削除成功" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }

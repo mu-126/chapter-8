@@ -33,3 +33,7 @@ export type AdminPostDetailResponse = {
 export type DeleteResponse = {
   message: string;
 };
+
+export type ErrorResponse = {
+  message: string;
+};
