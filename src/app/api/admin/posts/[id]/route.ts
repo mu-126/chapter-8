@@ -1,8 +1,13 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { AdminPostDetailResponse } from "@/_types/Post";
-import { DeleteResponse } from "@/_types/Post";
-import { ErrorResponse } from "@/_types/Post";
+import { AdminPostDetailResponse, DeleteResponse, ErrorResponse } from "@/_types/Post";
+
+// Date → string変換
+const formatPost = (post: any) => ({
+  ...post,
+  createdAt: post.createdAt.toISOString(),
+  updatedAt: post.updatedAt.toISOString(),
+});
 
 // GET: 記事詳細取得
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -32,7 +37,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "記事が見つかりません" }, { status: 404 });
     }
 
-    return NextResponse.json<AdminPostDetailResponse>({ post });
+    return NextResponse.json<AdminPostDetailResponse>({
+      post: formatPost(post),
+    });
   } catch (error) {
     console.error(error);
 
@@ -47,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const postId = Number(id);
 
     if (isNaN(postId)) {
-      return NextResponse.json({ message: "IDが不正です" }, { status: 400 });
+      return NextResponse.json<ErrorResponse>({ message: "IDが不正です" }, { status: 400 });
     }
 
     // リクエストボディ取得
@@ -56,7 +63,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     // バリデーション（最低限）
     if (!title || !content) {
-      return NextResponse.json({ message: "タイトルと内容は必須です" }, { status: 400 });
+      return NextResponse.json<ErrorResponse>({ message: "タイトルと内容は必須です" }, { status: 400 });
     }
 
     // 記事が存在するかチェック
@@ -65,7 +72,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     });
 
     if (!existingPost) {
-      return NextResponse.json({ message: "記事が見つかりません" }, { status: 404 });
+      return NextResponse.json<ErrorResponse>({ message: "記事が見つかりません" }, { status: 404 });
     }
 
     // 更新処理

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AdminPostDetailResponse } from "@/_types/Post";
 
-/* type Category = {
+type Category = {
   id: number;
   name: string;
-}; */
+};
 
 const PostEditPage = () => {
   const { id } = useParams();
@@ -27,6 +27,12 @@ const PostEditPage = () => {
 
       const post = data.post;
 
+      if (!post) {
+        alert("記事が見つかりません");
+        router.push("/admin/posts");
+        return;
+      }
+
       setTitle(post.title);
       setContent(post.content);
       setThumbnailUrl(post.thumbnailUrl);
@@ -41,12 +47,10 @@ const PostEditPage = () => {
 
     fetchPost();
     fetchCategories();
-  }, [id]);
+  }, [id, router]);
 
   // 更新
   const handleUpdate = async () => {
-    console.log("更新クリック");
-
     const res = await fetch(`/api/admin/posts/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -59,7 +63,8 @@ const PostEditPage = () => {
     });
 
     if (!res.ok) {
-      alert("更新失敗");
+      const err = await res.json();
+      alert(err.message);
       return;
     }
 
@@ -74,6 +79,12 @@ const PostEditPage = () => {
     await fetch(`/api/admin/posts/${id}`, {
       method: "DELETE",
     });
+
+    if (!res.ok) {
+      const err = await res.json();
+      alert(err.message);
+      return;
+    }
 
     alert("削除しました");
     router.push("/admin/posts");
