@@ -1,10 +1,11 @@
-export type Post = {
+// 共通の中身
+type PostBase<TDate> = {
   id: number;
   title: string;
   content: string;
   thumbnailUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: TDate;
+  updatedAt: TDate;
   postCategories: {
     category: {
       id: number;
@@ -13,23 +14,23 @@ export type Post = {
   }[];
 };
 
+// Prisma（サーバー内部）用
+export type Post = PostBase<Date>;
+
+// APIレスポンス用
+export type PostResponse = PostBase<string>;
+
+// 詳細API
 export type AdminPostDetailResponse = {
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    thumbnailUrl: string;
-    createdAt: string;
-    updatedAt: string;
-    postCategories: {
-      category: {
-        id: number;
-        name: string;
-      };
-    }[];
-  } | null;
+  post: PostResponse | null;
 };
 
+// 一覧API
+export type AdminPostsIndexResponse = {
+  posts: PostResponse[];
+};
+
+// 共通レスポンス
 export type DeleteResponse = {
   message: string;
 };
