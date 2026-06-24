@@ -1,15 +1,6 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-// レスポンスの型
-export type AdminCategoriesIndexResponse = {
-  categories: {
-    id: number;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
-};
+import type { AdminCategoriesIndexResponse } from "@/_types/Category";
 
 // 一覧取得（GET）
 export async function GET() {
@@ -21,11 +12,15 @@ export async function GET() {
     });
 
     return NextResponse.json<AdminCategoriesIndexResponse>({
-      categories,
+      categories: categories.map((c) => ({
+        ...c,
+        createdAt: c.createdAt.toISOString(),
+        updatedAt: c.updatedAt.toISOString(),
+      })),
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }
 
@@ -44,9 +39,18 @@ export async function POST(request: NextRequest) {
       data: { name },
     });
 
-    return NextResponse.json({ category }, { status: 201 });
+    return NextResponse.json<AdminCategoryCreateResponse>(
+      {
+        category: {
+          ...category,
+          createdAt: category.createdAt.toISOString(),
+          updatedAt: category.updatedAt.toISOString(),
+        },
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }

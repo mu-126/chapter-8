@@ -2,14 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-type Category = {
-  id: number;
-  name: string;
-};
+import type { AdminCategoriesIndexResponse } from "@/_types/Category";
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<AdminCategoriesIndexResponse["categories"]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +19,7 @@ const CategoriesPage = () => {
           throw new Error("取得失敗");
         }
 
-        const data = await res.json();
+        const data: AdminCategoriesIndexResponse = await res.json();
         setCategories(data.categories);
       } catch (error) {
         console.error(error);
