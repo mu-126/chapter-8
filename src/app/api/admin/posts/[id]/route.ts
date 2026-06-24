@@ -103,7 +103,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       },
     });
 
-    return NextResponse.json<AdminPostDetailResponse>({ post: updatedPost });
+    return NextResponse.json<AdminPostDetailResponse>({
+      post: formatPost(updatedPost),
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
