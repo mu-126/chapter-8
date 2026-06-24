@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-
-type Category = {
-  id: number;
-  name: string;
-};
+import type { AdminCategoryShowResponse } from "@/_types/Category";
 
 const CategoryDetailPage = () => {
   const params = useParams();
@@ -19,10 +15,22 @@ const CategoryDetailPage = () => {
   // 取得
   useEffect(() => {
     const fetchCategory = async () => {
-      const res = await fetch(`/api/admin/categories/${id}`);
-      const data = await res.json();
-      setName(data.category.name);
-      setLoading(false);
+      try {
+        const res = await fetch(`/api/admin/categories/${id}`);
+
+        if (!res.ok) {
+          throw new Error("取得失敗");
+        }
+
+        const data: AdminCategoryShowResponse = await res.json();
+
+        setName(data.category.name);
+      } catch (error) {
+        console.error(error);
+        alert("取得に失敗しました");
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (id) fetchCategory();
@@ -30,18 +38,24 @@ const CategoryDetailPage = () => {
 
   // 更新
   const handleUpdate = async () => {
-    const res = await fetch(`/api/admin/categories/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name }),
-    });
+    try {
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        throw new Error("更新失敗");
+      }
+
       alert("更新しました");
-    } else {
-      alert("更新失敗");
+      router.push("/admin/categories");
+    } catch (error) {
+      console.error(error);
+      alert("更新に失敗しました");
     }
   };
 
@@ -49,15 +63,20 @@ const CategoryDetailPage = () => {
   const handleDelete = async () => {
     if (!confirm("削除しますか？")) return;
 
-    const res = await fetch(`/api/admin/categories/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        method: "DELETE",
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        throw new Error("削除失敗");
+      }
+
       alert("削除しました");
       router.push("/admin/categories");
-    } else {
-      alert("削除失敗");
+    } catch (error) {
+      console.error(error);
+      alert("削除に失敗しました");
     }
   };
 
