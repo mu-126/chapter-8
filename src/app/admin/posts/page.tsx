@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { AdminPostsIndexResponse } from "@/app/api/admin/posts/route";
+import type { AdminPostsIndexResponse } from "@/_types/Post";
 import Image from "next/image";
 import Link from "next/link";
 

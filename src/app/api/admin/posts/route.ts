@@ -1,23 +1,6 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextResponse } from "next/server";
-
-// レスポンスの型
-export type AdminPostsIndexResponse = {
-  posts: {
-    id: number;
-    title: string;
-    content: string;
-    thumbnailUrl: string;
-    createdAt: Date;
-    updatedAt: Date;
-    postCategories: {
-      category: {
-        id: number;
-        name: string;
-      };
-    }[];
-  }[];
-};
+import type { AdminPostsIndexResponse } from "@/_types/Post";
 
 // GET /api/admin/posts
 export const GET = async () => {
@@ -40,7 +23,16 @@ export const GET = async () => {
       },
     });
 
-    return NextResponse.json<AdminPostsIndexResponse>({ posts }, { status: 200 });
+    return NextResponse.json<AdminPostsIndexResponse>(
+      {
+        posts: posts.map((post) => ({
+          ...post,
+          createdAt: post.createdAt.toISOString(),
+          updatedAt: post.updatedAt.toISOString(),
+        })),
+      },
+      { status: 200 },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
