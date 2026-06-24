@@ -1,23 +1,6 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-// レスポンスの型
-export type AdminCategoryShowResponse = {
-  category: {
-    id: number;
-    name: string;
-    posts: {
-      post: {
-        id: number;
-        title: string;
-        content: string;
-        thumbnailUrl: string;
-        createdAt: Date;
-        updatedAt: Date;
-      };
-    }[];
-  };
-};
+import type { AdminCategoryShowResponse, ErrorResponse, DeleteResponse } from "@/_types/Category";
 
 // GET
 export const GET = async (request: NextRequest, context: { params: Promise<{ id: string }> }) => {
@@ -39,12 +22,25 @@ export const GET = async (request: NextRequest, context: { params: Promise<{ id:
       return NextResponse.json({ message: "カテゴリーが見つかりません" }, { status: 404 });
     }
 
+    const formatCategory = (category: any) => ({
+      ...category,
+      createdAt: category.createdAt.toISOString(),
+      updatedAt: category.updatedAt.toISOString(),
+      posts: category.posts.map((p: any) => ({
+        post: {
+          ...p.post,
+          createdAt: p.post.createdAt.toISOString(),
+          updatedAt: p.post.updatedAt.toISOString(),
+        },
+      })),
+    });
+
     return NextResponse.json<AdminCategoryShowResponse>({
-      category,
+      category: formatCategory(category),
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 };
 
@@ -70,10 +66,17 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
       },
     });
 
-    return NextResponse.json(updatedCategory);
+    return NextResponse.json<AdminCategoryShowResponse>({
+      category: {
+        ...updatedCategory,
+        createdAt: updatedCategory.createdAt.toISOString(),
+        updatedAt: updatedCategory.updatedAt.toISOString(),
+        posts: [],
+      },
+    });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }
 
@@ -102,9 +105,9 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ id: 
       where: { id: categoryId },
     });
 
-    return NextResponse.json({ message: "削除しました" });
+    return NextResponse.json<DeleteResponse>({ message: "削除しました" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "サーバーエラー" }, { status: 500 });
+    return NextResponse.json<ErrorResponse>({ message: "サーバーエラー" }, { status: 500 });
   }
 }
