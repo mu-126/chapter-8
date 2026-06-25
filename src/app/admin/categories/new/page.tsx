@@ -1,22 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import CategoryForm from "@/components/CategoryForm";
 
 const NewCategoryPage = () => {
   const [name, setName] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreate = async () => {
+    try {
+      const res = await fetch("/api/admin/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
 
-    const res = await fetch("/api/admin/categories", {
-      method: "POST",
-      body: JSON.stringify({ name }),
-    });
+      if (!res.ok) {
+        throw new Error("作成失敗");
+      }
 
-    if (res.ok) {
       alert("カテゴリー作成成功！");
-      setName(""); // 入力リセット
-    } else {
+      router.push("/admin/categories");
+    } catch (error) {
+      console.error(error);
       alert("エラー");
     }
   };
@@ -27,18 +36,7 @@ const NewCategoryPage = () => {
       <h1 className="text-2xl font-bold mb-6">カテゴリー作成</h1>
 
       {/* フォーム */}
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-        {/* カテゴリー名 */}
-        <div>
-          <label className="block mb-1 text-sm">カテゴリー名</label>
-          <input className="w-full border rounded px-3 py-2" value={name} onChange={(e) => setName(e.target.value)} />
-        </div>
-
-        {/* ボタン */}
-        <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded">
-          作成
-        </button>
-      </form>
+      <CategoryForm name={name} setName={setName} onSubmit={handleCreate} />
     </div>
   );
 };

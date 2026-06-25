@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { AdminCategoryShowResponse } from "@/_types/Category";
+import CategoryForm from "@/components/CategoryForm";
 
 const CategoryDetailPage = () => {
   const params = useParams();
@@ -86,24 +87,7 @@ const CategoryDetailPage = () => {
     <div>
       <h1 className="text-2xl font-bold mb-6">カテゴリー編集</h1>
 
-      <div className="max-w-2xl">
-        {/* ラベル */}
-        <label className="block mb-2 font-medium">カテゴリー名</label>
-
-        {/* 入力欄 */}
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2 mb-4" />
-
-        {/* ボタン */}
-        <div className="flex gap-3">
-          <button onClick={handleUpdate} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-            更新
-          </button>
-
-          <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">
-            削除
-          </button>
-        </div>
-      </div>
+      <CategoryForm name={name} setName={setName} onSubmit={handleUpdate} onDelete={handleDelete} />
     </div>
   );
 };
