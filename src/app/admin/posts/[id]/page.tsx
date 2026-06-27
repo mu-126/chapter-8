@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import PostForm from "@/components/PostForm";
+import { AdminCategoriesIndexResponse, CategoryOption } from "@/_types/Category";
 import { AdminPostDetailResponse } from "@/_types/Post";
-
-type Category = {
-  id: number;
-  name: string;
-};
 
 const PostEditPage = () => {
   const { id } = useParams();
@@ -17,15 +14,16 @@ const PostEditPage = () => {
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryOption[]>([]);
 
   // 記事データ取得
   useEffect(() => {
-    const fetchPost = async () => {
-      const res = await fetch(`/api/admin/posts/${id}`);
-      const data: AdminPostDetailResponse = await res.json();
+    const fetchData = async () => {
+      // 記事
+      const postRes = await fetch(`/api/admin/posts/${id}`);
+      const postData: AdminPostDetailResponse = await postRes.json();
 
-      const post = data.post;
+      const post = postData.post;
 
       if (!post) {
         alert("記事が見つかりません");
@@ -37,16 +35,20 @@ const PostEditPage = () => {
       setContent(post.content);
       setThumbnailUrl(post.thumbnailUrl);
       setCategoryId(post.postCategories[0]?.category.id.toString() || "");
+
+      // カテゴリー
+      const catRes = await fetch("/api/admin/categories");
+      const catData: AdminCategoriesIndexResponse = await catRes.json();
+
+      const options = catData.categories.map((c: CategoryResponse) => ({
+        id: c.id,
+        name: c.name,
+      }));
+
+      setCategories(options);
     };
 
-    const fetchCategories = async () => {
-      const res = await fetch("/api/admin/categories");
-      const data = await res.json();
-      setCategories(data.categories);
-    };
-
-    fetchPost();
-    fetchCategories();
+    fetchData();
   }, [id, router]);
 
   // 更新
@@ -76,7 +78,7 @@ const PostEditPage = () => {
   const handleDelete = async () => {
     if (!confirm("本当に削除しますか？")) return;
 
-    await fetch(`/api/admin/posts/${id}`, {
+    const res = await fetch(`/api/admin/posts/${id}`, {
       method: "DELETE",
     });
 
@@ -94,44 +96,7 @@ const PostEditPage = () => {
     <div className="max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">記事編集</h1>
 
-      <div className="space-y-4">
-        <div>
-          <label>タイトル</label>
-          <input className="w-full border p-2 rounded" value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-
-        <div>
-          <label>内容</label>
-          <textarea className="w-full border p-2 rounded" rows={6} value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-
-        <div>
-          <label>サムネイルURL</label>
-          <input className="w-full border p-2 rounded" value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} />
-        </div>
-
-        <div>
-          <label>カテゴリー</label>
-          <select className="w-full border p-2 rounded" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-            <option value="">選択してください</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex gap-3 pt-4">
-          <button onClick={handleUpdate} className="bg-indigo-600 text-white px-4 py-2 rounded">
-            更新
-          </button>
-
-          <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">
-            削除
-          </button>
-        </div>
-      </div>
+      <PostForm title={title} content={content} thumbnailUrl={thumbnailUrl} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailUrl={setThumbnailUrl} onChangeCategoryId={setCategoryId} onSubmit={handleUpdate} onDelete={handleDelete} submitLabel="更新" />
     </div>
   );
 };
