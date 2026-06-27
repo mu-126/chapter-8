@@ -15,6 +15,7 @@ const PostEditPage = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState<CategoryOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 記事データ取得
   useEffect(() => {
@@ -53,50 +54,62 @@ const PostEditPage = () => {
 
   // 更新
   const handleUpdate = async () => {
-    const res = await fetch(`/api/admin/posts/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title,
-        content,
-        thumbnailUrl,
-        categoryIds: categoryId ? [Number(categoryId)] : [],
-      }),
-    });
+    setIsLoading(true);
 
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.message);
-      return;
+    try {
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          content,
+          thumbnailUrl,
+          categoryIds: categoryId ? [Number(categoryId)] : [],
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message);
+        return;
+      }
+
+      alert("更新成功");
+      router.push("/admin/posts");
+    } finally {
+      setIsLoading(false);
     }
-
-    alert("更新成功");
-    router.push("/admin/posts");
   };
 
   // 削除
   const handleDelete = async () => {
     if (!confirm("本当に削除しますか？")) return;
 
-    const res = await fetch(`/api/admin/posts/${id}`, {
-      method: "DELETE",
-    });
+    setIsLoading(true);
 
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.message);
-      return;
+    try {
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message);
+        return;
+      }
+
+      alert("削除しました");
+      router.push("/admin/posts");
+    } finally {
+      setIsLoading(false);
     }
-
-    alert("削除しました");
-    router.push("/admin/posts");
   };
 
   return (
     <div className="max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">記事編集</h1>
 
-      <PostForm title={title} content={content} thumbnailUrl={thumbnailUrl} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailUrl={setThumbnailUrl} onChangeCategoryId={setCategoryId} onSubmit={handleUpdate} onDelete={handleDelete} submitLabel="更新" />
+      <PostForm title={title} content={content} thumbnailUrl={thumbnailUrl} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailUrl={setThumbnailUrl} onChangeCategoryId={setCategoryId} onSubmit={handleUpdate} onDelete={handleDelete} submitLabel="更新" isLoading={isLoading} />
     </div>
   );
 };

@@ -16,4 +16,5 @@ export type PostFormProps = {
   submitLabel: string;
 
   onDelete?: () => void;
+  isLoading: boolean;
 };
