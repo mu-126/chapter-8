@@ -6,9 +6,12 @@ import CategoryForm from "@/components/CategoryForm";
 
 const NewCategoryPage = () => {
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleCreate = async () => {
+    setIsLoading(true);
+
     try {
       const res = await fetch("/api/admin/categories", {
         method: "POST",
@@ -27,6 +30,8 @@ const NewCategoryPage = () => {
     } catch (error) {
       console.error(error);
       alert("エラー");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -36,7 +41,7 @@ const NewCategoryPage = () => {
       <h1 className="text-2xl font-bold mb-6">カテゴリー作成</h1>
 
       {/* フォーム */}
-      <CategoryForm name={name} setName={setName} onSubmit={handleCreate} />
+      <CategoryForm name={name} setName={setName} onSubmit={handleCreate} isLoading={isLoading} />
     </div>
   );
 };

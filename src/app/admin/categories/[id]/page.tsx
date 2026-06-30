@@ -12,6 +12,7 @@ const CategoryDetailPage = () => {
 
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 取得
   useEffect(() => {
@@ -39,6 +40,8 @@ const CategoryDetailPage = () => {
 
   // 更新
   const handleUpdate = async () => {
+    setIsLoading(true);
+
     try {
       const res = await fetch(`/api/admin/categories/${id}`, {
         method: "PUT",
@@ -57,12 +60,16 @@ const CategoryDetailPage = () => {
     } catch (error) {
       console.error(error);
       alert("更新に失敗しました");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // 削除
   const handleDelete = async () => {
     if (!confirm("削除しますか？")) return;
+
+    setIsLoading(true);
 
     try {
       const res = await fetch(`/api/admin/categories/${id}`, {
@@ -78,6 +85,8 @@ const CategoryDetailPage = () => {
     } catch (error) {
       console.error(error);
       alert("削除に失敗しました");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,7 +96,7 @@ const CategoryDetailPage = () => {
     <div>
       <h1 className="text-2xl font-bold mb-6">カテゴリー編集</h1>
 
-      <CategoryForm name={name} setName={setName} onSubmit={handleUpdate} onDelete={handleDelete} />
+      <CategoryForm name={name} setName={setName} onSubmit={handleUpdate} onDelete={handleDelete} isLoading={isLoading} />
     </div>
   );
 };
