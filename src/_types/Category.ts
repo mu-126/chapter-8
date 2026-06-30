@@ -54,9 +54,3 @@ export type CategoryOption = {
   id: number;
   name: string;
 };
-
-// UI用（セレクトボックスなど）
-export type CategoryOption = {
-  id: number;
-  name: string;
-};

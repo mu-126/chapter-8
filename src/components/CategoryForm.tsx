@@ -1,11 +1,6 @@
-type Props = {
-  name: string;
-  setName: (value: string) => void;
-  onSubmit: () => void;
-  onDelete?: () => void;
-};
+import type { CategoryFormProps } from "@/types/forms/categoryForm";
 
-const CategoryForm = ({ name, setName, onSubmit, onDelete, isLoading }: Props) => {
+const CategoryForm = ({ name, setName, onSubmit, onDelete, isLoading }: CategoryFormProps) => {
   return (
     <div className="max-w-2xl">
       {/* ラベル */}
