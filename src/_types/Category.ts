@@ -48,9 +48,3 @@ export type DeleteResponse = {
 export type ErrorResponse = {
   message: string;
 };
-
-// フォーム用（UI専用）
-export type CategoryOption = {
-  id: number;
-  name: string;
-};

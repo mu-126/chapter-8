@@ -5,3 +5,8 @@ export type CategoryFormProps = {
   onDelete?: () => void;
   isLoading?: boolean;
 };
+
+export type CategoryOption = {
+  id: number;
+  name: string;
+};

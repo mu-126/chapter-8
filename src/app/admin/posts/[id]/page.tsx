@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import PostForm from "@/components/PostForm";
-import { AdminCategoriesIndexResponse, CategoryOption } from "@/_types/Category";
+import { AdminCategoriesIndexResponse } from "@/_types/Category";
+import { CategoryOption } from "@/_types/forms/categoryForm";
 import { AdminPostDetailResponse } from "@/_types/Post";
 
 const PostEditPage = () => {
