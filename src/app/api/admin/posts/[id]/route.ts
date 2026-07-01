@@ -1,9 +1,9 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { AdminPostDetailResponse, DeleteResponse, ErrorResponse } from "@/_types/Post";
+import { Post, AdminPostDetailResponse, DeleteResponse, ErrorResponse } from "@/_types/Post";
 
 // Date → string変換
-const formatPost = (post: any) => ({
+const formatPost = (post: Post) => ({
   ...post,
   createdAt: post.createdAt.toISOString(),
   updatedAt: post.updatedAt.toISOString(),

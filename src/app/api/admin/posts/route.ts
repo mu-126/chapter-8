@@ -1,6 +1,12 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextResponse } from "next/server";
-import type { AdminPostsIndexResponse } from "@/_types/Post";
+import type { AdminPostsIndexResponse, AdminPostDetailResponse, Post, PostResponse } from "@/_types/Post";
+
+const formatPost = (post: Post): PostResponse => ({
+  ...post,
+  createdAt: post.createdAt.toISOString(),
+  updatedAt: post.updatedAt.toISOString(),
+});
 
 // GET /api/admin/posts
 export const GET = async () => {
@@ -25,11 +31,7 @@ export const GET = async () => {
 
     return NextResponse.json<AdminPostsIndexResponse>(
       {
-        posts: posts.map((post) => ({
-          ...post,
-          createdAt: post.createdAt.toISOString(),
-          updatedAt: post.updatedAt.toISOString(),
-        })),
+        posts: posts.map(formatPost),
       },
       { status: 200 },
     );
@@ -74,7 +76,12 @@ export const POST = async (req: Request) => {
       },
     });
 
-    return NextResponse.json(post, { status: 201 });
+    return NextResponse.json<AdminPostDetailResponse>(
+      {
+        post: formatPost(post),
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });
