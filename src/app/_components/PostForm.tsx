@@ -1,7 +1,7 @@
 "use client";
 
 import { PostFormProps } from "@/_types/postForm";
-import { Input } from "@/_components/Input";
+import { Input } from "@/app/_components/Input";
 
 const PostForm = ({ title, content, thumbnailUrl, categoryId, categories, onChangeTitle, onChangeContent, onChangeThumbnailUrl, onChangeCategoryId, onSubmit, submitLabel, onDelete, isLoading }: PostFormProps) => {
   return (
