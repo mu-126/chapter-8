@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import type { AdminCategoryShowResponse } from "@/_types/Category";
-import CategoryForm from "@/components/CategoryForm";
+import CategoryForm from "@/app/_components/CategoryForm";
 
 const CategoryDetailPage = () => {
   const params = useParams();

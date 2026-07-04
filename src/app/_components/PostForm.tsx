@@ -1,13 +1,14 @@
 "use client";
 
 import { PostFormProps } from "@/_types/postForm";
+import { Input } from "@/_components/Input";
 
 const PostForm = ({ title, content, thumbnailUrl, categoryId, categories, onChangeTitle, onChangeContent, onChangeThumbnailUrl, onChangeCategoryId, onSubmit, submitLabel, onDelete, isLoading }: PostFormProps) => {
   return (
     <div className="space-y-4">
       <div>
         <label>タイトル</label>
-        <input className="w-full border p-2 rounded disabled:opacity-50 disabled:cursor-not-allowed" value={title} onChange={(e) => onChangeTitle(e.target.value)} disabled={isLoading} />
+        <Input value={title} onChange={onChangeTitle} disabled={isLoading} />
       </div>
 
       <div>
@@ -17,7 +18,7 @@ const PostForm = ({ title, content, thumbnailUrl, categoryId, categories, onChan
 
       <div>
         <label>サムネイルURL</label>
-        <input className="w-full border p-2 rounded disabled:opacity-50 disabled:cursor-not-allowed" value={thumbnailUrl} onChange={(e) => onChangeThumbnailUrl(e.target.value)} disabled={isLoading} />
+        <Input value={thumbnailUrl} onChange={onChangeThumbnailUrl} disabled={isLoading} />
       </div>
 
       <div>

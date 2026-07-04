@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import CategoryForm from "@/components/CategoryForm";
+import CategoryForm from "@/app/_components/CategoryForm";
 
 const NewCategoryPage = () => {
   const [name, setName] = useState("");

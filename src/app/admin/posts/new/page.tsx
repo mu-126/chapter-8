@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import PostForm from "@/components/PostForm";
+import PostForm from "@/app/_components/PostForm";
 import { Category } from "@/_types/Category";
 import { useRouter } from "next/navigation";
 

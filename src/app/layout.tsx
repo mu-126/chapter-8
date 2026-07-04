@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "../components/Header";
+import Header from "./_components/Header";
 
 // import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
