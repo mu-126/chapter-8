@@ -6,6 +6,7 @@ import PostForm from "@/app/_components/PostForm";
 import { AdminCategoriesIndexResponse } from "@/_types/Category";
 import { CategoryOption } from "@/_types/forms/categoryForm";
 import { AdminPostDetailResponse } from "@/_types/Post";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 const PostEditPage = () => {
   const { id } = useParams();
@@ -17,12 +18,20 @@ const PostEditPage = () => {
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { token } = useSupabaseSession();
 
   // 記事データ取得
   useEffect(() => {
+    if (!token) return;
+
     const fetchData = async () => {
       // 記事
-      const postRes = await fetch(`/api/admin/posts/${id}`);
+      const postRes = await fetch(`/api/admin/posts/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token, // 👈 Header に token を付与
+        },
+      });
       const postData: AdminPostDetailResponse = await postRes.json();
 
       const post = postData.post;
@@ -39,7 +48,12 @@ const PostEditPage = () => {
       setCategoryId(post.postCategories[0]?.category.id.toString() || "");
 
       // カテゴリー
-      const catRes = await fetch("/api/admin/categories");
+      const catRes = await fetch("/api/admin/categories", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
       const catData: AdminCategoriesIndexResponse = await catRes.json();
 
       const options = catData.categories.map((c: CategoryResponse) => ({
@@ -51,16 +65,20 @@ const PostEditPage = () => {
     };
 
     fetchData();
-  }, [id, router]);
+  }, [id, router, token]);
 
   // 更新
   const handleUpdate = async () => {
+    if (!token) return;
     setIsLoading(true);
 
     try {
       const res = await fetch(`/api/admin/posts/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
         body: JSON.stringify({
           title,
           content,
@@ -84,6 +102,7 @@ const PostEditPage = () => {
 
   // 削除
   const handleDelete = async () => {
+    if (!token) return;
     if (!confirm("本当に削除しますか？")) return;
 
     setIsLoading(true);
@@ -91,6 +110,10 @@ const PostEditPage = () => {
     try {
       const res = await fetch(`/api/admin/posts/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
       });
 
       if (!res.ok) {

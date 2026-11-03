@@ -1,9 +1,14 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import type { AdminCategoriesIndexResponse } from "@/_types/Category";
+import { supabase } from "@/app/_libs/supabase";
 
 // 一覧取得（GET）
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const categories = await prisma.category.findMany({
       orderBy: {
@@ -26,6 +31,10 @@ export async function GET() {
 
 // 新規作成（POST）
 export async function POST(request: NextRequest) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const body = await request.json();
     const { name } = body;

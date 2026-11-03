@@ -1,6 +1,7 @@
 import { prisma } from "@/app/_libs/prisma";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import type { AdminPostsIndexResponse, AdminPostDetailResponse, Post, PostResponse } from "@/_types/Post";
+import { supabase } from "@/app/_libs/supabase";
 
 const formatPost = (post: Post): PostResponse => ({
   ...post,
@@ -9,7 +10,18 @@ const formatPost = (post: Post): PostResponse => ({
 });
 
 // GET /api/admin/posts
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+  // GET関数の引数からrequestを受け取り、その中にAuthorizationヘッダーが含まれているので、それを取り出す
+  const token = request.headers.get("Authorization") ?? "";
+
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
+
+  // 送ったtokenが正しくない場合、errorが返却されるので、クライアントにもエラーを返す
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
+  // tokenが正しい場合、以降が実行される
+
   try {
     const posts = await prisma.post.findMany({
       orderBy: {
@@ -44,6 +56,10 @@ export const GET = async () => {
 
 // POST /api/admin/posts
 export const POST = async (req: Request) => {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const body = await req.json();
 

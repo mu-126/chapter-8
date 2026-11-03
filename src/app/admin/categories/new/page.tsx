@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CategoryForm from "@/app/_components/CategoryForm";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 const NewCategoryPage = () => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { token } = useSupabaseSession();
 
   const handleCreate = async () => {
+    if (!token) return;
     setIsLoading(true);
 
     try {
@@ -17,6 +20,7 @@ const NewCategoryPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token, // 👈 Header に token を付与
         },
         body: JSON.stringify({ name }),
       });
