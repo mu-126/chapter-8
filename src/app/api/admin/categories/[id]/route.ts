@@ -1,9 +1,14 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import type { AdminCategoryShowResponse, ErrorResponse, DeleteResponse } from "@/_types/Category";
+import { supabase } from "@/app/_libs/supabase";
 
 // GET
 export const GET = async (request: NextRequest, context: { params: Promise<{ id: string }> }) => {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const { id } = await context.params;
 
@@ -46,6 +51,10 @@ export const GET = async (request: NextRequest, context: { params: Promise<{ id:
 
 // PUT: カテゴリー更新
 export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const { id } = await context.params;
 
@@ -82,6 +91,10 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
 // DELETE: カテゴリー削除
 export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const { id } = await context.params;
     const categoryId = Number(id);

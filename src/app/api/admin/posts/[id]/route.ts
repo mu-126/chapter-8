@@ -1,6 +1,7 @@
 import { prisma } from "@/app/_libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { Post, AdminPostDetailResponse, DeleteResponse, ErrorResponse } from "@/_types/Post";
+import { supabase } from "@/app/_libs/supabase";
 
 // Date → string変換
 const formatPost = (post: Post) => ({
@@ -10,7 +11,11 @@ const formatPost = (post: Post) => ({
 });
 
 // GET: 記事詳細取得
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     // paramsをawait
     const { id } = await params;
@@ -48,7 +53,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT: 記事更新
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const { id } = await params;
     const postId = Number(id);
@@ -59,7 +68,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     // リクエストボディ取得
     const body = await request.json();
-    const { title, content, thumbnailUrl, categoryIds } = body;
+    const { title, content, thumbnailImageKey, categoryIds } = body;
 
     // バリデーション（最低限）
     if (!title || !content) {
@@ -81,7 +90,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       data: {
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey,
 
         // カテゴリ更新（全削除→再作成）
         postCategories: {
@@ -113,7 +122,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE: 記事削除API
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error) return NextResponse.json({ status: error.message }, { status: 400 });
+
   try {
     const { id } = await params;
 

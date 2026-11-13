@@ -3,17 +3,26 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { AdminCategoriesIndexResponse } from "@/_types/Category";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState<AdminCategoriesIndexResponse["categories"]>([]);
   const [loading, setLoading] = useState(true);
+  const { token } = useSupabaseSession();
 
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
       try {
         setLoading(true);
 
-        const res = await fetch("/api/admin/categories");
+        const res = await fetch("/api/admin/categories", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token, // 👈 Header に token を付与
+          },
+        });
 
         if (!res.ok) {
           throw new Error("取得失敗");
@@ -30,7 +39,7 @@ const CategoriesPage = () => {
     };
 
     fetcher();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return <div className="p-8">読み込み中…</div>;

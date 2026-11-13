@@ -1,38 +1,31 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRouteGuard } from "./_hooks/useRouteGuard";
 
-const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  useRouteGuard();
+
   const pathname = usePathname();
-
-  const isCategory = pathname.startsWith("/admin/categories");
-  const isPost = pathname.startsWith("/admin/posts");
+  const isSelected = (href: string) => {
+    return pathname.includes(href);
+  };
 
   return (
-    <div className="min-h-screen">
-      <div className="flex">
-        {/* サイドバー */}
-        <aside className="w-64 bg-gray-200 min-h-screen">
-          {/* <div className="p-4 space-y-2"> */}
-          <div>
-            <Link href="/admin/posts" className={`block w-full px-4 py-2 rounded ${isPost ? "bg-blue-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
-              記事一覧
-            </Link>
+    <>
+      {/* サイドバー */}
+      <aside className="fixed bg-gray-100 w-70 left-0 bottom-0 top-18">
+        <Link href="/admin/posts" className={`p-4 block hover:bg-blue-100 ${isSelected("/admin/posts") && "bg-blue-100"}`}>
+          記事一覧
+        </Link>
+        <Link href="/admin/categories" className={`p-4 block hover:bg-blue-100 ${isSelected("/admin/categories") && "bg-blue-100"}`}>
+          カテゴリー一覧
+        </Link>
+      </aside>
 
-            <Link href="/admin/categories" className={`block w-full px-4 py-2 rounded ${isCategory ? "bg-blue-200 text-gray-900 font-semibold" : "text-gray-700"}`}>
-              カテゴリー一覧
-            </Link>
-          </div>
-        </aside>
-
-        {/* メイン */}
-        <main className="flex-1 p-8">
-          {children} {/* ここに page.tsx が入る */}
-        </main>
-      </div>
-    </div>
+      {/* メインエリア */}
+      <div className="ml-70 p-4">{children}</div>
+    </>
   );
-};
-
-export default AdminLayout;
+}

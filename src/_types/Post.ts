@@ -3,7 +3,7 @@ type PostBase<TDate> = {
   id: number;
   title: string;
   content: string;
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
   createdAt: TDate;
   updatedAt: TDate;
   postCategories: {

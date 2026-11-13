@@ -4,25 +4,34 @@ import { useEffect, useState } from "react";
 import type { AdminPostsIndexResponse } from "@/_types/Post";
 import Image from "next/image";
 import Link from "next/link";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 const AdminPostsPage = () => {
   const [posts, setPosts] = useState<AdminPostsIndexResponse["posts"]>([]);
   const [loading, setLoading] = useState(true); // postsの状態管理
+  const { token } = useSupabaseSession();
 
   useEffect(() => {
+    if (!token) return;
+
     const fetcher = async () => {
       try {
         setLoading(true);
 
-        const res = await fetch("/api/admin/posts"); // fetchでAPIにデータを取りに行く
+        const res = await fetch("/api/admin/posts", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token, // 👈 Header に token を付与
+          },
+        }); // fetchでAPIにデータを取りに行く
 
         if (!res.ok) {
           throw new Error("取得失敗");
         }
 
-        const data: AdminPostsIndexResponse = await res.json(); // JSONに変換
+        const { posts }: AdminPostsIndexResponse = await res.json(); // JSONに変換
 
-        setPosts(data.posts); // 取得したデータを画面に入れる
+        setPosts([...posts]); // 取得したデータを画面に入れる
       } catch (error) {
         console.error(error);
         setPosts([]);
@@ -32,7 +41,7 @@ const AdminPostsPage = () => {
     };
 
     fetcher();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return <div className="p-8">読み込み中…</div>;
