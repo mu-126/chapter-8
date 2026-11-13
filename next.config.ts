@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.microcms-assets.io", // ← 追加
       },
+      {
+        protocol: "https",
+        hostname: "iuygruglppscyvjfqirf.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };

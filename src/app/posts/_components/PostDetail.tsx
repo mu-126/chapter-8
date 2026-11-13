@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { supabase } from "@/app/_libs/supabase";
 import { useParams } from "next/navigation";
 // import type { Post } from "@/_types/Post";
 // import { MicroCmsPost } from "@/app/_types/MicroCmsPost";
@@ -14,7 +15,9 @@ const PostDetail = () => {
   // const [post, setPost] = useState<Post | null>(null);
   const [post, setPost] = useState<PostShowResponse["post"] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null);
 
+  // 記事データ取得
   useEffect(() => {
     const fetcher = async () => {
       try {
@@ -41,6 +44,20 @@ const PostDetail = () => {
     fetcher();
   }, [id]);
 
+  // 画像URL取得
+  useEffect(() => {
+    if (!post?.thumbnailImageKey) {
+      setThumbnailImageUrl(null);
+      return;
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("post_thumbnail").getPublicUrl(post.thumbnailImageKey);
+
+    setThumbnailImageUrl(publicUrl);
+  }, [post]);
+
   // まだ読み込み中
   if (loading) {
     return <div className="max-w-3xl max-auto my-16">読み込み中…</div>;
@@ -54,7 +71,7 @@ const PostDetail = () => {
   return (
     <div className="max-w-3xl mx-auto my-16 space-y-10">
       <div key={post.id}>
-        <div>{post.thumbnailUrl && <Image src={post.thumbnailUrl} alt="" width={800} height={400} unoptimized />}</div>
+        <div>{thumbnailImageUrl && <Image src={thumbnailImageUrl} alt="" width={800} height={400} unoptimized />}</div>
         <div className="p-4">
           <div className="flex justify-between text-sm  text-gray-500 mb-1">
             <span>{new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" })}</span>

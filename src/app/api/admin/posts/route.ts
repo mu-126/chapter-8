@@ -56,7 +56,7 @@ export const GET = async (request: NextRequest) => {
 
 // POST /api/admin/posts
 export const POST = async (req: Request) => {
-  const token = request.headers.get("Authorization") ?? "";
+  const token = req.headers.get("Authorization") ?? "";
   const { error } = await supabase.auth.getUser(token);
   if (error) return NextResponse.json({ status: error.message }, { status: 400 });
 
@@ -72,7 +72,7 @@ export const POST = async (req: Request) => {
       data: {
         title: body.title,
         content: body.content,
-        thumbnailUrl: body.thumbnailUrl,
+        thumbnailImageKey: body.thumbnailImageKey,
 
         // post.createの中で「postCategories」を一緒に作る
         postCategories: {

@@ -11,7 +11,7 @@ const NewPostPage = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -65,7 +65,7 @@ const NewPostPage = () => {
         body: JSON.stringify({
           title,
           content,
-          thumbnailUrl,
+          thumbnailImageKey,
           categoryIds: categoryId ? [Number(categoryId)] : [],
         }),
       });
@@ -89,7 +89,7 @@ const NewPostPage = () => {
     <div className="max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">記事作成</h1>
 
-      <PostForm title={title} content={content} thumbnailUrl={thumbnailUrl} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailUrl={setThumbnailUrl} onChangeCategoryId={setCategoryId} onSubmit={handleCreate} submitLabel="作成" isLoading={isLoading} />
+      <PostForm title={title} content={content} thumbnailImageKey={thumbnailImageKey} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailImageKey={setThumbnailImageKey} onChangeCategoryId={setCategoryId} onSubmit={handleCreate} submitLabel="作成" isLoading={isLoading} />
     </div>
   );
 };

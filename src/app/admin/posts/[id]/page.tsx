@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import PostForm from "@/app/_components/PostForm";
-import { AdminCategoriesIndexResponse } from "@/_types/Category";
+import { AdminCategoriesIndexResponse, CategoryResponse } from "@/_types/Category";
 import { CategoryOption } from "@/_types/forms/categoryForm";
 import { AdminPostDetailResponse } from "@/_types/Post";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
@@ -14,7 +14,7 @@ const PostEditPage = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailImageKey, setThumbnailImageKey] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +44,7 @@ const PostEditPage = () => {
 
       setTitle(post.title);
       setContent(post.content);
-      setThumbnailUrl(post.thumbnailUrl);
+      setThumbnailImageKey(post.thumbnailImageKey);
       setCategoryId(post.postCategories[0]?.category.id.toString() || "");
 
       // カテゴリー
@@ -82,7 +82,7 @@ const PostEditPage = () => {
         body: JSON.stringify({
           title,
           content,
-          thumbnailUrl,
+          thumbnailImageKey,
           categoryIds: categoryId ? [Number(categoryId)] : [],
         }),
       });
@@ -133,7 +133,21 @@ const PostEditPage = () => {
     <div className="max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">記事編集</h1>
 
-      <PostForm title={title} content={content} thumbnailUrl={thumbnailUrl} categoryId={categoryId} categories={categories} onChangeTitle={setTitle} onChangeContent={setContent} onChangeThumbnailUrl={setThumbnailUrl} onChangeCategoryId={setCategoryId} onSubmit={handleUpdate} onDelete={handleDelete} submitLabel="更新" isLoading={isLoading} />
+      <PostForm
+        title={title}
+        content={content}
+        thumbnailImageKey={thumbnailImageKey}
+        categoryId={categoryId}
+        categories={categories}
+        onChangeTitle={setTitle}
+        onChangeContent={setContent}
+        onChangeThumbnailImageKey={setThumbnailImageKey}
+        onChangeCategoryId={setCategoryId}
+        onSubmit={handleUpdate}
+        onDelete={handleDelete}
+        submitLabel="更新"
+        isLoading={isLoading}
+      />
     </div>
   );
 };
