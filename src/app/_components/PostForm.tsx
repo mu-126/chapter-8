@@ -49,10 +49,6 @@ const PostForm = ({ title, content, thumbnailImageKey, categoryId, categories, o
         data: { publicUrl },
       } = await supabase.storage.from("post_thumbnail").getPublicUrl(thumbnailImageKey);
 
-      console.log("thumbnailImageKey:", thumbnailImageKey);
-      console.log("publicUrl:", publicUrl);
-      console.log("hostname:", new URL(publicUrl).hostname);
-
       setThumbnailImageUrl(publicUrl);
     };
 
